@@ -22,7 +22,7 @@ import Link from "next/link";
 
 // fetch a single item based on page we are one and inject
 // as prop
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async () => {
   const res = await Fetcher(ALL_PAGES);
   const allPages = res.data.pages.nodes;
 
@@ -52,6 +52,12 @@ export const getStaticProps = async ({ params }) => {
 };
 
 const Blog = ({ allPages }) => {
+  const createMarkup = (data) => {
+    return {
+      __html: data,
+    };
+  };
+
   return (
     <div className="container">
       <main className="main">
@@ -60,7 +66,12 @@ const Blog = ({ allPages }) => {
             return (
               <div className="card" key={page.slug}>
                 <h3>{page.title}</h3>
-                <p />
+                return{" "}
+                <div dangerouslySetInnerHTML={createMarkup(page.excerpt)} />
+                <p>{page.date}</p>
+                <Link href={`/post/${page.slug}`}>
+                  <a>Read more</a>
+                </Link>
               </div>
             );
           })}
